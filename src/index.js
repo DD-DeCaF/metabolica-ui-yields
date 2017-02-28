@@ -1,5 +1,5 @@
 import angular from 'angular';
-import {DevAppModule} from 'iloop-frontend-core';
+import {DevAppModule} from 'metabolica';
 import {TheoreticalYieldModule} from './yields/yields.module';
 export {TheoreticalYieldModule} from './yields/yields.module';
 

@@ -1,5 +1,5 @@
 import angular from 'angular';
-import VARIANTS_ICON from '../../img/icons/variants.svg';
+import GROUPWORK from '../../img/icons/group_work.svg';
 import {TheoreticalYieldService} from './yields.service';
 import {PlotService} from './plot.service';
 import {TheoreticalYieldComponent} from './yields.component'
@@ -11,11 +11,11 @@ export const TheoreticalYieldModule = angular.module('yields', [
 	.service('PlotService', PlotService)
 	.component('yields', TheoreticalYieldComponent)
 	.config(function ($mdIconProvider, $stateProvider, appNavigationProvider) {
-        $mdIconProvider.icon('variants', VARIANTS_ICON, 24);
+        $mdIconProvider.icon('group_work', GROUPWORK, 24);
 
         appNavigationProvider.register('app.project.yields', {
             title: 'Theoretical Yield',
-            icon: 'variants',
+            icon: 'group_work',
             requiresProject: true
         });
 
