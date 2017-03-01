@@ -112,8 +112,5 @@ class TheoreticalYieldController {
 export const TheoreticalYieldComponent: angular.IComponentOptions = {
     controller: TheoreticalYieldController,
     controllerAs: 'TheoreticalYieldController',
-    template: module.toString(),
-    bindings: {
-        project: '<project'
-    }
+    template: module.toString()
 };

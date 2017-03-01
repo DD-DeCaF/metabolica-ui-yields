@@ -13,15 +13,14 @@ export const TheoreticalYieldModule = angular.module('yields', [
 	.config(function ($mdIconProvider, $stateProvider, appNavigationProvider) {
         $mdIconProvider.icon('group_work', GROUPWORK, 24);
 
-        appNavigationProvider.register('app.project.yields', {
+        appNavigationProvider.register('app.yields', {
             title: 'Theoretical Yield',
-            icon: 'group_work',
-            requiresProject: true
+            icon: 'group_work'
         });
 
         $stateProvider
             .state({
-                name: 'app.project.yields',
+                name: 'app.yields',
                 url: '/yields',
                 component: 'yields',
                 data: {
