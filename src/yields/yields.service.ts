@@ -1,28 +1,27 @@
-import {API_ROOT_URL} from './constants';
-
-
 export class TheoreticalYieldService {
 	private $http: angular.IHttpService;
+	private api: string;
 
-	constructor($http) {
+	constructor($http, decafAPI) {
 		this.$http = $http;
+		this.api = decafAPI;
 	}
 	loadExperiments() {
 		return this.$http({
 			method: 'GET',
-			url: `${API_ROOT_URL}/experiments`
+			url: `${this.api}/experiments`
 		});
 	}
 	loadSamples(experimentId) {
 		return this.$http({
 			method: 'GET',
-			url: `${API_ROOT_URL}/experiments/${experimentId}/samples`
+			url: `${this.api}/experiments/${experimentId}/samples`
 		});
 	}
 	sampleYields(sampleId) {
 		return this.$http({
 			method: 'GET',
-			url: `${API_ROOT_URL}/samples/${sampleId}/maximum-yield`
+			url: `${this.api}/samples/${sampleId}/maximum-yield`
 		});
 	}
 }
