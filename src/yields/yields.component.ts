@@ -2,6 +2,7 @@ import * as angular from 'angular';
 import {PlotService} from './plot.service';
 import {TheoreticalYieldService} from './yields.service';
 import * as module from './yields.component.html';
+import './yields.component.scss';
 
 
 class TheoreticalYieldController {

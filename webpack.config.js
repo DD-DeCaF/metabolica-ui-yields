@@ -28,7 +28,7 @@ module.exports = function () {
 						&& module.context.indexOf('metabolica') === -1;
 				}
 			}),
-			new ExtractTextPlugin('styles.css'),
+			new ExtractTextPlugin('[chunkhash].[name].css'),
 			new HtmlWebpackPlugin({
 				inject: 'head',
 				template: './src/index.html',
