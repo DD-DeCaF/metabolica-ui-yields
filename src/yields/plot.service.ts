@@ -1,10 +1,6 @@
-var Plotly = require('plotly.js/lib/core');
-
-const plotService = angular.module('plot.service', []);
+import * as angular from 'angular';
 
 export class PlotService {
-	constructor() {
-	}
 
 	plotPhase(domId, metabolite, growthRate, theoreticalYields) {
 		var strains = {'wild': 'rgb(22, 96, 167)', 'modified': 'rgb(205, 12, 24)'};
@@ -43,20 +39,27 @@ export class PlotService {
 
 			if (currentKey !== null) {
 
-				function connect(index: number) {
-					return {
-						x: [points['objective_lower_bound'][index], points['objective_upper_bound'][index]],
-						y: [points[currentKey][index], points[currentKey][index]],
+                let last = points['objective_upper_bound'].length - 1;
+
+				this.push({
+						x: [points['objective_lower_bound'][0], points['objective_upper_bound'][0]],
+						y: [points[currentKey][0], points[currentKey][0]],
 						type: 'scatter',
 						mode: 'lines',
 						showlegend: false,
 						line: {color: color},
 						name: currentKey
-					};
-				}
+				});
 
-				this.push(connect(0));
-				this.push(connect(points['objective_upper_bound'].length - 1));
+                this.push({
+						x: [points['objective_lower_bound'][last], points['objective_upper_bound'][last]],
+						y: [points[currentKey][last], points[currentKey][last]],
+						type: 'scatter',
+						mode: 'lines',
+						showlegend: false,
+						line: {color: color},
+						name: currentKey
+				});
 			}
 
 		}, data);
@@ -77,9 +80,9 @@ export class PlotService {
 			}
 		};
 
-		Plotly.newPlot(domId, data, layout);
+		return {
+			'data': data,
+			'layout': layout
+		};
 	}
 }
-
-plotService.service('PlotService', PlotService);
-export default plotService;

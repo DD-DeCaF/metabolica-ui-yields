@@ -17,10 +17,9 @@
 			<h4>Phase {{ key }}</h4>
 			<md-grid-list md-cols="2" md-row-height="350">
 				<md-grid-tile ng-repeat='(metabolite, metaboliteData) in value.metabolites'>
-					<div style="width: 400px; height: 300px" id="plot_{{ key }}_{{ metabolite }}"></div>
+					<plot plot-data="TheoreticalYieldController.plotData['plot_' + key + '_' + metabolite]"></plot>
 				</md-grid-tile>
 			</md-grid-list>
 		</div>
 	</div>
 </md-content>
-
