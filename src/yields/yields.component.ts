@@ -6,23 +6,25 @@ import './yields.component.scss';
 
 
 class TheoreticalYieldController {
-    private $timeout: angular.ITimeoutService;
-    TheoreticalYieldService: TheoreticalYieldService;
-    PlotService: PlotService;
-    plotData: any;
-    isWaiting: boolean;
-    experiments: any[];
-    samples: any[];
-    formConfig: any[];
-    searchTexts: any;
-    data: any;
+    private $timeout:angular.ITimeoutService;
+    TheoreticalYieldService:TheoreticalYieldService;
+    PlotService:PlotService;
+    plotData:any;
+    isWaiting:boolean;
+    experiments:any[];
+    samples:any[];
+    models:any[];
+    formConfig:any[];
+    searchTexts:any;
+    data:any;
 
-    constructor($timeout, TheoreticalYieldService: TheoreticalYieldService, PlotService: PlotService) {
+    constructor($timeout, TheoreticalYieldService:TheoreticalYieldService, PlotService:PlotService) {
         this.$timeout = $timeout;
         this.TheoreticalYieldService = TheoreticalYieldService;
         this.PlotService = PlotService;
         this.experiments = [];
         this.samples = [];
+        this.models = [];
         this.isWaiting = false;
         this.plotData = {};
         this.loadLists();
@@ -33,24 +35,18 @@ class TheoreticalYieldController {
                 'list': () => this.experiments
             },
             {
-                'title': 'Sample',
+                'title': 'Samples',
                 'attr': 'samples',
                 'list': () => this.samples[this.searchTexts.experiments]
+            },
+            {
+                'title': 'Model',
+                'attr': 'models',
+                'list': () => this.models[this.searchTexts.samples]
             }
         ];
         this.searchTexts = {};
         this.data = {};
-    }
-
-    querySearch (query, data) {
-        return query ? data.filter( this.createFilterFor(query) ) : data;
-    }
-
-    createFilterFor(query) {
-        var lowercaseQuery = angular.lowercase(query);
-        return function filterFn(option) {
-            return (angular.lowercase(option.display).indexOf(lowercaseQuery) !== -1);
-        };
     }
 
     loadLists() {
@@ -59,7 +55,7 @@ class TheoreticalYieldController {
 
     loadExperiments() {
         this.TheoreticalYieldService.loadExperiments()
-            .then((data: any) => {
+            .then((data:any) => {
                 data.data.forEach((value) => {
                     this.experiments.push({
                         value: value.id,
@@ -75,30 +71,52 @@ class TheoreticalYieldController {
             let experimentId = value.value;
             this.samples[experimentId] = [];
             this.TheoreticalYieldService.loadSamples(experimentId)
-                .then((data: any) => {
-                        data.data.forEach((sample) => {
-                            this.samples[experimentId].push({
-                                value: sample.id,
-                                display: sample.name
-                            })
+                .then((data:any) => {
+                    data.data.forEach((sample) => {
+                        this.samples[experimentId].push({
+                            value: sample.id,
+                            display: sample.name
                         })
-                    }
-                )
+                    });
+                    this.loadModelOptions();
+                });
+        });
+    }
+
+    loadModelOptions() {
+        this.samples.forEach((value) => {
+            value.forEach((sample) => {
+                let sampleIds = sample.value;
+                this.TheoreticalYieldService.loadModelOptions(sampleIds)
+                    .then((data:any) => {
+                        this.models[sampleIds] = [];
+                        data.data.forEach((value) => {
+                            this.models[sampleIds].push({
+                                value: value,
+                                display: value
+                            })
+                        });
+                    })
+            });
+
         });
     }
 
     submit() {
-        let currentSample = this.searchTexts['samples'];
+        let currentSampleGroup = this.searchTexts['samples'];
+        let currentModel = this.searchTexts['models'];
+        console.log(currentModel);
+        console.log(currentSampleGroup);
         this.isWaiting = true;
-        this.TheoreticalYieldService.sampleYields(currentSample)
-            .then((data: any) =>
-                {
+        this.TheoreticalYieldService.sampleYields(currentSampleGroup, currentModel)
+            .then((data:any) => {
                     this.isWaiting = false;
-                    this.data[currentSample] = data.data;
-                    angular.forEach(this.data[currentSample], (phaseYields, phase) => {
+                    this.data[currentSampleGroup] = data.data;
+                    angular.forEach(this.data[currentSampleGroup], (phaseYields, phase) => {
                         angular.forEach(phaseYields.metabolites, (metaboliteYield, metabolite) => {
                             var id = 'plot_' + phase + '_' + metabolite;
-                            this.plotData[id] = this.PlotService.plotPhase(id, metabolite, phaseYields['growth-rate'], metaboliteYield);
+                            this.plotData[id] = this.PlotService.plotPhase(id, metabolite,
+                                phaseYields['growth-rate'], metaboliteYield);
                         });
                     });
                 },
@@ -110,7 +128,7 @@ class TheoreticalYieldController {
     }
 }
 
-export const TheoreticalYieldComponent: angular.IComponentOptions = {
+export const TheoreticalYieldComponent:angular.IComponentOptions = {
     controller: TheoreticalYieldController,
     controllerAs: 'TheoreticalYieldController',
     template: module.toString()
