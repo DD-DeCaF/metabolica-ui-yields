@@ -17,7 +17,8 @@ export const TheoreticalYieldModule = angular.module('yields', [
 
         appNavigationProvider.register('app.yields', {
             title: 'Theoretical Yield',
-            icon: 'group_work'
+            icon: 'group_work',
+			authRequired: false
         });
 
         $stateProvider
