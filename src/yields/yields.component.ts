@@ -56,7 +56,7 @@ class TheoreticalYieldController {
     loadExperiments() {
         this.TheoreticalYieldService.loadExperiments()
             .then((data:any) => {
-                data.data.forEach((value) => {
+                data.data['response'].forEach((value) => {
                     this.experiments.push({
                         value: value.id,
                         display: value.name
@@ -72,7 +72,7 @@ class TheoreticalYieldController {
             this.samples[experimentId] = [];
             this.TheoreticalYieldService.loadSamples(experimentId)
                 .then((data:any) => {
-                    data.data.forEach((sample) => {
+                    data.data['response'].forEach((sample) => {
                         this.samples[experimentId].push({
                             value: sample.id,
                             display: sample.name
@@ -90,7 +90,7 @@ class TheoreticalYieldController {
                 this.TheoreticalYieldService.loadModelOptions(sampleIds)
                     .then((data:any) => {
                         this.models[sampleIds] = [];
-                        data.data.forEach((value) => {
+                        data.data['response'].forEach((value) => {
                             this.models[sampleIds].push({
                                 value: value,
                                 display: value
@@ -105,18 +105,16 @@ class TheoreticalYieldController {
     submit() {
         let currentSampleGroup = this.searchTexts['samples'];
         let currentModel = this.searchTexts['models'];
-        console.log(currentModel);
-        console.log(currentSampleGroup);
         this.isWaiting = true;
         this.TheoreticalYieldService.sampleYields(currentSampleGroup, currentModel)
             .then((data:any) => {
                     this.isWaiting = false;
-                    this.data[currentSampleGroup] = data.data;
+                    this.data[currentSampleGroup] = data.data['response'];
                     angular.forEach(this.data[currentSampleGroup], (phaseYields, phase) => {
-                        angular.forEach(phaseYields.metabolites, (metaboliteYield, metabolite) => {
+                        angular.forEach(phaseYields['metabolites'], (metaboliteYield, metabolite) => {
                             var id = 'plot_' + phase + '_' + metabolite;
                             this.plotData[id] = this.PlotService.plotPhase(id, metabolite,
-                                phaseYields['growth-rate'], metaboliteYield);
+                                phaseYields['growthRate'], metaboliteYield);
                         });
                     });
                 },

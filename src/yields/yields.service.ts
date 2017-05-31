@@ -23,17 +23,17 @@ export class TheoreticalYieldService {
 
     loadModelOptions(sampleIds) {
         return this.$http({
-            method: 'GET',
+            method: 'POST',
             url: `${this.api}/samples/model-options`,
-            params: {'sample-ids': JSON.stringify(sampleIds)}
+            data: {'sampleIds': sampleIds}
         });
     }
 
     sampleYields(sampleIds, modelId) {
         return this.$http({
-            method: 'GET',
+            method: 'POST',
             url: `${this.api}/data-adjusted/maximum-yield`,
-            params: {'sample-ids': JSON.stringify(sampleIds), 'model-id': modelId}
+            data: {'sampleIds': sampleIds, 'modelId': modelId}
         });
     }
 }
