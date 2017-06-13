@@ -3,32 +3,28 @@ import * as angular from 'angular';
 export class PlotService {
 
 	plotPhase(domId, metabolite, growthRate, theoreticalYields) {
-		var strains = {'wild': 'rgb(22, 96, 167)', 'modified': 'rgb(205, 12, 24)'};
-		var point = {
+		let strains = {'wild': 'rgb(22, 96, 167)', 'modified': 'rgb(205, 12, 24)'};
+		let point = {
 			x: growthRate,
-			y: [theoreticalYields.flux],
+			y: [theoreticalYields.flux.reduce((p, c) => c += p)/theoreticalYields.flux.length],
 			type: 'scatter',
 			showlegend: false,
 			line: {color: strains['modified']},
 			name: 'experiment data'
 		};
 
-		var data = [point];
+		let data = [point];
 
-		var currentKey = null;
+		let currentKey = null;
 
 		angular.forEach(strains, function(color, strainKey) {
-			var points = theoreticalYields['phase-planes'][strainKey];
-			angular.forEach(theoreticalYields['phase-planes'][strainKey], function (value, key) {
-				if (key != 'objective_lower_bound' && key != 'objective_upper_bound') {
-					currentKey = key;
-				}
-			});
-			var keys = ['objective_lower_bound', 'objective_upper_bound'];
-			for (var ind in keys) {
+			let points = theoreticalYields['phasePlanes'][strainKey];
+			currentKey = points['objectiveId'];
+			let keys = ['objectiveLowerBound', 'objectiveUpperBound'];
+			for (let ind in keys) {
  				this.push({
 					x: points[keys[ind]],
-					y: points[currentKey],
+					y: points['objective'],
 					type: 'scatter',
 					mode: 'lines',
 					showlegend: false,
@@ -39,11 +35,11 @@ export class PlotService {
 
 			if (currentKey !== null) {
 
-                let last = points['objective_upper_bound'].length - 1;
+                let last = points['objectiveUpperBound'].length - 1;
 
 				this.push({
-						x: [points['objective_lower_bound'][0], points['objective_upper_bound'][0]],
-						y: [points[currentKey][0], points[currentKey][0]],
+						x: [points['objectiveLowerBound'][0], points['objectiveUpperBound'][0]],
+						y: [points['objective'][0], points['objective'][0]],
 						type: 'scatter',
 						mode: 'lines',
 						showlegend: false,
@@ -52,8 +48,8 @@ export class PlotService {
 				});
 
                 this.push({
-						x: [points['objective_lower_bound'][last], points['objective_upper_bound'][last]],
-						y: [points[currentKey][last], points[currentKey][last]],
+						x: [points['objectiveLowerBound'][last], points['objectiveUpperBound'][last]],
+						y: [points['objective'][last], points['objective'][last]],
 						type: 'scatter',
 						mode: 'lines',
 						showlegend: false,
@@ -64,7 +60,7 @@ export class PlotService {
 
 		}, data);
 
-		var layout = {
+		let layout = {
 			autosize: false,
 			width: 400,
 			height: 300,
