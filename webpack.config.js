@@ -82,7 +82,8 @@ module.exports = function () {
 				{ 	test: /\.tsx?$/,
 					loader: "ts-loader",
 					include: [
-						path.resolve(__dirname, 'src')
+						path.resolve(__dirname, 'src'),
+						__dirname
 					]
 				}
 			]
