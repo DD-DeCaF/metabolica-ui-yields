@@ -1,5 +1,5 @@
 import angular from 'angular';
-import GROUPWORK from '../../img/icons/group_work.svg';
+import CHART from '../../img/icons/multiline_chart.svg';
 import {TheoreticalYieldService} from './yields.service';
 import {PlotService} from './plot.service';
 import {TheoreticalYieldComponent} from './yields.component'
@@ -13,12 +13,13 @@ export const TheoreticalYieldModule = angular.module('yields', [
 	.service('PlotService', PlotService)
 	.component('yields', TheoreticalYieldComponent)
 	.config(function ($mdIconProvider, $stateProvider, appNavigationProvider) {
-        $mdIconProvider.icon('group_work', GROUPWORK, 24);
+        $mdIconProvider.icon('chart', CHART, 24);
 
         appNavigationProvider.register('app.yields', {
             title: 'Theoretical Yield',
-            icon: 'group_work',
-			authRequired: false
+            icon: 'chart',
+			authRequired: false,
+			tooltip: 'Assess strain performance in the context of theoretical growth and production yields'
         });
 
         $stateProvider
