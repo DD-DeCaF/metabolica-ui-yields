@@ -1,3 +1,4 @@
+import * as angular from "angular";
 export class TheoreticalYieldService {
     private $http:angular.IHttpService;
     private api:string;
@@ -7,21 +8,21 @@ export class TheoreticalYieldService {
         this.api = decafAPI;
     }
 
-    loadExperiments() {
+    loadExperiments(): angular.IPromise<any> {
         return this.$http({
             method: 'GET',
             url: `${this.api}/experiments`
         });
     }
 
-    loadSamples(experimentId) {
+    loadSamples(experimentId): angular.IPromise<any> {
         return this.$http({
             method: 'GET',
             url: `${this.api}/experiments/${experimentId}/samples`
         });
     }
 
-    loadModelOptions(sampleIds) {
+    loadModelOptions(sampleIds): angular.IPromise<any> {
         return this.$http({
             method: 'POST',
             url: `${this.api}/samples/model-options`,
@@ -29,7 +30,7 @@ export class TheoreticalYieldService {
         });
     }
 
-    sampleYields(sampleIds, modelId) {
+    sampleYields(sampleIds, modelId): angular.IPromise<any> {
         return this.$http({
             method: 'POST',
             url: `${this.api}/data-adjusted/maximum-yield`,
