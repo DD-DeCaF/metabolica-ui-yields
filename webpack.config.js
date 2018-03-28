@@ -9,6 +9,48 @@ module.exports = function () {
 		entry: {
 			main: './src/index.js'
 		},
+		optimization: {
+			splitChunks: {
+				chunks: 'all',
+				minSize: 0,
+				maxAsyncRequests: Infinity,
+				maxInitialRequests: Infinity,
+				name: true,
+				cacheGroups: {
+					default: {
+						chunks: 'async',
+						minSize: 30000,
+						minChunks: 2,
+						maxAsyncRequests: 5,
+						maxInitialRequests: 3,
+						priority: -20,
+						reuseExistingChunk: true,
+					},
+					vendors: {
+						name: 'vendor',
+						enforce: true,
+						test: function (module) {
+							return (
+								module.context
+								&& module.context.indexOf('node_modules') !== -1
+							);
+						},
+						priority: -10,
+						reuseExistingChunk: true,
+					},
+					commons: {
+						name: 'manifest',
+						chunks: 'initial',
+						minChunks: 2,
+						test: function (module) {
+							return module.context && module.context.indexOf('metabolica') === -1;
+						},
+						priority: -5,
+						reuseExistingChunk: true,
+					},
+				},
+			}
+		},
 		output: {
 			filename: '[chunkhash].[name].js',
 			path: path.resolve(__dirname, 'dist')
@@ -17,17 +59,17 @@ module.exports = function () {
 			extensions: ['.ts', '.tsx', '.js']
 		},
 		node: {
-		  fs: "empty"
+			fs: "empty"
 		},
 		plugins: [
-			new webpack.optimize.CommonsChunkPlugin({
+			/* new webpack.optimize.CommonsChunkPlugin({
 				names: ['vendor', 'manifest'],
 				minChunks: function (module) {
 					return module.context
 						&& module.context.indexOf('node_modules') !== -1
 						&& module.context.indexOf('metabolica') === -1;
 				}
-			}),
+			}), */
 			new ExtractTextPlugin('[chunkhash].[name].css'),
 			new HtmlWebpackPlugin({
 				inject: 'head',
@@ -63,12 +105,12 @@ module.exports = function () {
 						path.resolve(__dirname, 'src'),
 						path.dirname(require.resolve('metabolica'))
 					],
-					loader: 'babel-loader',
-					query: {
-						presets: ['es2015', 'stage-0'],
-						plugins: [
-							'transform-runtime'
-						]
+					use: {
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env'],
+							plugins: [require('@babel/plugin-transform-runtime')]
+						}
 					}
 				},
 				{
@@ -79,7 +121,8 @@ module.exports = function () {
 					test: /\.(jpe?g|png|svg)$/,
 					loader: 'file-loader?name=[path][name].[ext]'
 				},
-				{ 	test: /\.tsx?$/,
+				{
+					test: /\.tsx?$/,
 					loader: "ts-loader",
 					include: [
 						path.resolve(__dirname, 'src'),
