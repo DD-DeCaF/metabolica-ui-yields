@@ -24,21 +24,21 @@ export class TheoreticalYieldService {
     loadExperiments() {
         return this.$http({
             method: 'GET',
-            url: `${this.api}/experiments`
+            url: `${this.api}/iloop-to-model/experiments`
         });
     }
 
     loadSamples(experimentId) {
         return this.$http({
             method: 'GET',
-            url: `${this.api}/experiments/${experimentId}/samples`
+            url: `${this.api}/iloop-to-model/experiments/${experimentId}/samples`
         });
     }
 
     loadModelOptions(sampleIds) {
         return this.$http({
             method: 'POST',
-            url: `${this.api}/samples/model-options`,
+            url: `${this.api}/iloop-to-model/samples/model-options`,
             data: {'sampleIds': sampleIds}
         });
     }
@@ -46,7 +46,7 @@ export class TheoreticalYieldService {
     sampleYields(sampleIds, modelId) {
         return this.$http({
             method: 'POST',
-            url: `${this.api}/data-adjusted/maximum-yield`,
+            url: `${this.api}/iloop-to-model/data-adjusted/maximum-yield`,
             data: {'sampleIds': sampleIds, 'modelId': modelId}
         });
     }
